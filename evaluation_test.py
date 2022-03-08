@@ -282,27 +282,16 @@ if __name__ == "__main__":
 
     model.eval()
     gec_pairs = []
+    print('Total %d Steps' % (test_data_num))
     with torch.no_grad():
         with open(test_eval_path, 'w', encoding='utf8') as o:
             for test_step in range(test_data_num):
+                if test_step % 1000==0:
+                    print('Processed %d Steps'%(test_step))
                 test_batch_text_list, test_batch_tag_list = nerdata.get_next_batch(batch_size=1, mode='test')
                 ground_truth_batch_tag_list = test_batch_tag_list
                 test_tag_matrix = process_batch_tag(test_batch_tag_list, nerdata.label_dict)
                 test_mask_matrix = make_mask(test_batch_tag_list)
-                # for i in range(10):
-                    # [['下', '个', '星', '期', '，', '我', '跟', '我', '朋', '唷', '打', '算', '去', '法', '国', '玩', '儿', '。',
-                    #   '<-MASK->', '<-SEP->']]
-                    # [[53, 20, 383, 182, 7, 21, 462, 21, 488, 210, 195, 524, 103, 146, 56, 491, 278, 9, 5, 5]]
-                    # [[4  53  20 383 182   7  21 462  21 488 210 195 524 103 146  56 491 278
-                    #   9   5   5]]
-                    # [[4  53  20 383 182   7  21 462  21 488 210 195 524 103 146  56 491 278
-                    #   9   5   5]]
-                    # if i != 0:
-                    #     test_batch_text_list = predict_tag_str.split(' ')
-                    #     test_batch_tag_list = [[label_id_dict[w] for w in test_batch_text_list]]
-                    #     test_batch_text_list = [test_batch_text_list]
-                    #     test_tag_matrix = process_batch_tag(test_batch_tag_list, nerdata.label_dict)
-                    #     test_mask_matrix = make_mask(test_batch_tag_list)
                 test_batch_result, _, _, _, test_input_data = model(test_batch_text_list, test_mask_matrix, test_tag_matrix, fine_tune=False)
 
                 input_text = ''
@@ -330,11 +319,6 @@ if __name__ == "__main__":
                 predicted_ppl = calculatePerplexity(predicted_wrong_sent, gpt2model, gpt2tokenizer)
                 #print(correct_sent)
                 correct_ppl = calculatePerplexity(correct_sent, gpt2model, gpt2tokenizer)
-                #print('-'*10)
-                # print(wrong_sent, origin_ppl)
-                # print(predicted_wrong_sent, predicted_ppl)
-                # print(correct_sent, correct_ppl)
-                # print('-' * 10)
                 # if predicted_ppl < origin_ppl and correct_ppl < predicted_ppl:
                 if correct_ppl < predicted_ppl:
                     gec_pairs.append([predicted_wrong_sent, correct_sent])
