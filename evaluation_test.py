@@ -284,7 +284,7 @@ if __name__ == "__main__":
     gec_pairs = []
     print('Total %d Steps' % (test_data_num))
     with torch.no_grad():
-        with open(test_eval_path, 'w', encoding='utf8') as o:
+        with open(test_eval_path, 'w', encoding='utf8') as o, open (args.augment_data_file, 'w', encoding='utf-8') as w_file:
             for test_step in range(test_data_num):
                 if test_step % 1000==0:
                     print('Processed %d Steps'%(test_step))
@@ -321,8 +321,9 @@ if __name__ == "__main__":
                 # correct_ppl = calculatePerplexity(correct_sent, gpt2model, gpt2tokenizer)
                 # # if predicted_ppl < origin_ppl and correct_ppl < predicted_ppl:
                 # if correct_ppl < predicted_ppl:
-                gec_pairs.append([predicted_wrong_sent, correct_sent])
+                # gec_pairs.append([predicted_wrong_sent, correct_sent])
+                w_file.write('\t'.join([predicted_wrong_sent, correct_sent]) + '\n')
 
-    with open (args.augment_data_file, 'w', encoding='utf-8') as w_file:
-        for pair in gec_pairs:
-            w_file.write('\t'.join(pair)+'\n')
+    # with open (args.augment_data_file, 'w', encoding='utf-8') as w_file:
+    #     for pair in gec_pairs:
+    #         w_file.write('\t'.join(pair)+'\n')
