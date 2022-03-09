@@ -313,15 +313,15 @@ if __name__ == "__main__":
                 wrong_sent = ''.join([w for w in list(input_text.split(' '))if w not in SPECIAL_TOKEN])
                 predicted_wrong_sent = ''.join([w for w in list(predict_tag_str.split(' '))if w not in SPECIAL_TOKEN])
                 correct_sent = ''.join([w for w in list(target_text.split(' '))if w not in SPECIAL_TOKEN])
-                #print(wrong_sent)
-                origin_ppl = calculatePerplexity(wrong_sent, gpt2model, gpt2tokenizer)
-                #print(predicted_wrong_sent)
-                predicted_ppl = calculatePerplexity(predicted_wrong_sent, gpt2model, gpt2tokenizer)
-                #print(correct_sent)
-                correct_ppl = calculatePerplexity(correct_sent, gpt2model, gpt2tokenizer)
-                # if predicted_ppl < origin_ppl and correct_ppl < predicted_ppl:
-                if correct_ppl < predicted_ppl:
-                    gec_pairs.append([predicted_wrong_sent, correct_sent])
+                # #print(wrong_sent)
+                # origin_ppl = calculatePerplexity(wrong_sent, gpt2model, gpt2tokenizer)
+                # #print(predicted_wrong_sent)
+                # predicted_ppl = calculatePerplexity(predicted_wrong_sent, gpt2model, gpt2tokenizer)
+                # #print(correct_sent)
+                # correct_ppl = calculatePerplexity(correct_sent, gpt2model, gpt2tokenizer)
+                # # if predicted_ppl < origin_ppl and correct_ppl < predicted_ppl:
+                # if correct_ppl < predicted_ppl:
+                gec_pairs.append([predicted_wrong_sent, correct_sent])
 
     with open (args.augment_data_file, 'w', encoding='utf-8') as w_file:
         for pair in gec_pairs:
